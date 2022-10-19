@@ -10,13 +10,26 @@ import axios from 'axios';
  }
 
  export const getWeather = async (query:string) => {
-    const res = await axios.get(URL, {
-        params: {
-            q: query,
-            units: 'metric',
-            APPID: API_KEY
-        }
-    });
-
-    return res.data
+    let res
+    try {
+         res = await axios.get(URL, {
+            params: {
+                q: query,
+                units: 'metric',
+                APPID: API_KEY
+            }
+        });
+    
+        return res.data
+    } catch (error) {
+        // let errorMessage = "Failed to do something exceptional";
+        const statusCode = error.response ? error.response.status : null;
+        // if (error instanceof Error) {
+        //        res = error.message;
+        //      }
+          if(statusCode === 404) {
+            res = new Error(error)
+          } 
+        return res;
+    }
  }
